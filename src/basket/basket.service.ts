@@ -1,6 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { AddProductDto } from "./dto/add-product.dto";
-import { AddProductToBasketResponse, RemoveProductFromBasketResponse } from "../interfaces/basket";
+import {
+  AddProductToBasketResponse,
+  ListProductsInBasketResponse,
+  RemoveProductFromBasketResponse
+} from "../interfaces/basket";
 import { ShopService } from "../shop/shop.service";
 
 @Injectable()
@@ -36,8 +40,6 @@ export class BasketService {
 
     items.push(item)
 
-    console.log(items)
-
     return {
       isSuccess: true,
       index: items.length - 1,
@@ -59,10 +61,12 @@ export class BasketService {
 
     splice(index, 1)
 
-    console.log(this.items);
-
     return {
       isSuccess: true
     }
+  }
+
+  list(): ListProductsInBasketResponse {
+    return this.items;
   }
 }
