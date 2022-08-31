@@ -12,3 +12,8 @@ export interface RemoveProductFromBasketResponse {
 }
 
 export type ListProductsInBasketResponse = AddProductDto[]
+
+export type GetTotalPriceOfBasketResponse = number | {
+  isSuccess: false
+  alternativeBasket: AddProductDto[]
+}
