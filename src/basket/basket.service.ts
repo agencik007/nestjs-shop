@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import { AddProductDto } from "./dto/add-product.dto";
 import { AddProductToBasketResponse, RemoveProductFromBasketResponse } from "../interfaces/basket";
 
@@ -8,42 +8,50 @@ export class BasketService {
 
   add(item: AddProductDto): AddProductToBasketResponse {
 
+    const { count, name } = item;
+
     if (
-      typeof item.name !== 'string'
+      typeof name !== 'string'
       ||
-      typeof item.count !== 'number'
+      typeof count !== 'number'
       ||
-      item.count < 1
+      count < 1
       ||
-      item.name === ''
+      name === ''
     ) {
       return {
         isSuccess: false,
       }
     }
 
-    this.items.push(item)
+    const { items } = this;
 
-    console.log(this.items)
+    items.push(item)
+
+    console.log(items)
 
     return {
       isSuccess: true,
-      index: this.items.length - 1,
+      index: items.length - 1,
     }
   }
 
   remove(index: number): RemoveProductFromBasketResponse {
+    const { length, splice } = this.items;
+
     if (
       index < 0
       ||
-      index >= this.items.length
+      index >= length
     ) {
       return {
         isSuccess: false
       }
     }
 
-    this.items.splice(index, 1)
+    splice(index, 1)
+
+    console.log(this.items);
 
     return {
       isSuccess: true
