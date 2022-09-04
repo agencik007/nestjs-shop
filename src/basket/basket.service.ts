@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable} from "@nestjs/common";
 import { AddProductDto } from "./dto/add-product.dto";
 import {
   AddProductToBasketResponse, GetTotalPriceOfBasketResponse,
@@ -12,7 +12,7 @@ export class BasketService {
   private items: AddProductDto[] = []
 
   constructor(
-    @Inject(ShopService) private shopService: ShopService,
+    @Inject(forwardRef(() => ShopService)) private shopService: ShopService,
   ) {
   }
 
@@ -71,7 +71,7 @@ export class BasketService {
   }
 
   getTotalPrice(): GetTotalPriceOfBasketResponse {
-    if (this.items.every(item => this.shopService.hasProduct(item.name))) {
+    if (!this.items.every(item => this.shopService.hasProduct(item.name))) {
       const alternativeBasket = this.items.filter(item => this.shopService.hasProduct(item.name))
 
       return {
