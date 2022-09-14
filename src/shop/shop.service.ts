@@ -45,31 +45,29 @@
 //   }
 // }
 
-import {Injectable} from '@nestjs/common';
-import {ShopItem} from "./shop-item.entity";
+import { Injectable } from '@nestjs/common';
+import { ShopItem } from './shop-item.entity';
 
 @Injectable()
 export class ShopService {
-
-
   async getProducts(): Promise<ShopItem[]> {
     return ShopItem.find();
   }
 
   async hasProduct(name: string): Promise<boolean> {
-    return (await this.getProducts()).some(item => item.name === name);
+    return (await this.getProducts()).some((item) => item.name === name);
   }
 
   async getPriceOfProduct(name: string): Promise<number> {
-    return (await this.getProducts()).find(item => item.name === name).price;
+    return (await this.getProducts()).find((item) => item.name === name).price;
   }
 
   async getOneProduct(id: string): Promise<ShopItem> {
-    return await ShopItem.findOneOrFail({where: {id}})
+    return await ShopItem.findOneOrFail({ where: { id } });
   }
 
   async removeOneProduct(id: string) {
-    await ShopItem.delete(id)
+    await ShopItem.delete(id);
   }
 
   async createOneProduct(): Promise<ShopItem> {
@@ -77,19 +75,19 @@ export class ShopService {
 
     newItem.name = 'Buraki';
     newItem.description = 'Bardzo dobre!';
-    newItem.price = 25.00;
+    newItem.price = 25.0;
 
-    await ShopItem.save(newItem)
+    await ShopItem.save(newItem);
 
     return newItem;
   }
 
   async addBoughtCounter(id: string) {
     await ShopItem.update(id, {
-      wasEvenBought: true
-    })
+      wasEvenBought: true,
+    });
 
-    const item = await ShopItem.findOneOrFail({where: { id }});
+    const item = await ShopItem.findOneOrFail({ where: { id } });
 
     item.boughtCounter++;
 

@@ -1,19 +1,23 @@
-import { AddProductDto } from "../basket/dto/add-product.dto"
+import { AddProductDto } from '../basket/dto/add-product.dto';
 
-export type AddProductToBasketResponse = {
-  isSuccess: true
-  index: number
-} | {
-  isSuccess: false
-}
+export type AddProductToBasketResponse =
+  | {
+      isSuccess: true;
+      index: number;
+    }
+  | {
+      isSuccess: false;
+    };
 
 export interface RemoveProductFromBasketResponse {
-  isSuccess: boolean
+  isSuccess: boolean;
 }
 
-export type ListProductsInBasketResponse = AddProductDto[]
+export type ListProductsInBasketResponse = AddProductDto[];
 
-export type GetTotalPriceOfBasketResponse = number | {
-  isSuccess: false
-  alternativeBasket: AddProductDto[]
-}
+export type GetTotalPriceOfBasketResponse =
+  | number
+  | {
+      isSuccess: false;
+      alternativeBasket: AddProductDto[];
+    };

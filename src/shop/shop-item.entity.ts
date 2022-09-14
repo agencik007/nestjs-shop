@@ -1,5 +1,5 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { ShopItemInterface } from "../interfaces/shop";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { ShopItemInterface } from '../interfaces/shop';
 
 @Entity()
 export class ShopItem extends BaseEntity implements ShopItemInterface {
@@ -7,7 +7,7 @@ export class ShopItem extends BaseEntity implements ShopItemInterface {
   id: string;
 
   @Column({
-    length: 60,
+    length: 25,
   })
   name: string;
 
@@ -20,7 +20,7 @@ export class ShopItem extends BaseEntity implements ShopItemInterface {
 
   @Column({
     type: 'longtext',
-    default: '(brak)',
+    default: '',
   })
   description: string;
 
@@ -42,7 +42,7 @@ export class ShopItem extends BaseEntity implements ShopItemInterface {
   boughtCounter: number;
 
   @Column({
-    default: false
+    default: false,
   })
   wasEvenBought: boolean;
 }
