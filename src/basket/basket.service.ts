@@ -18,7 +18,7 @@ export class BasketService {
 
   add(item: AddProductDto): AddProductToBasketResponse {
 
-    const { count, name } = item;
+    const { count, name, id } = item;
 
     if (
       typeof name !== 'string'
@@ -36,13 +36,13 @@ export class BasketService {
       }
     }
 
-    const { items } = this;
+    this.items.push(item)
 
-    items.push(item)
+    this.shopService.addBoughtCounter(id).then(r => console.log(r));
 
     return {
       isSuccess: true,
-      index: items.length - 1,
+      index: this.items.length - 1,
     }
   }
 
@@ -70,7 +70,7 @@ export class BasketService {
     return this.items;
   }
 
-  getTotalPrice(): GetTotalPriceOfBasketResponse {
+  async getTotalPrice(): Promise<GetTotalPriceOfBasketResponse> {
     if (!this.items.every(item => this.shopService.hasProduct(item.name))) {
       const alternativeBasket = this.items.filter(item => this.shopService.hasProduct(item.name))
 
@@ -80,8 +80,13 @@ export class BasketService {
       }
     }
 
-    return this.items
-      .map(item => this.shopService.getPriceOfProduct(item.name) * item.count * 1.23)
-      .reduce((prev, curr) => prev + curr, 0)
+    return (await Promise.all(
+      this.items
+        .map(async item => (await this.shopService.getPriceOfProduct(item.name)) * item.count * 1.23)))
+        .reduce((prev, curr) => prev + curr, 0)
+  }
+
+  async countPromo(): Promise<number> {
+    return (await this.getTotalPrice()) > 10 ? 1 : 0;
   }
 }
