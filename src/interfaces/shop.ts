@@ -10,3 +10,8 @@ export type GetListOfProductsResponse = ShopItemInterface[];
 export type GetOneProductResponse = ShopItemInterface;
 
 export type CreateProductResponse = ShopItemInterface;
+
+export interface GetPaginatedListOfProductsResponse {
+  items: ShopItemInterface[];
+  pagesCount: number;
+}
