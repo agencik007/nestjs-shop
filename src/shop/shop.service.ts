@@ -1,65 +1,42 @@
-// import { forwardRef, Inject, Injectable } from "@nestjs/common";
-// import { GetListOfProductsResponse } from "../interfaces/shop";
-// import { BasketService } from "../basket/basket.service";
-// import { InjectRepository } from "@nestjs/typeorm";
-// import { ShopItem } from "./shop-item.entity";
-// import { Repository } from "typeorm";
-//
-// // [
-// //   {
-// //     name: 'Intel Core i5 8600k',
-// //     description: 'dobry procesor do gier',
-// //     price: 1250,
-// //   },
-// //   {
-// //     name: '2x16GB Crucial Fast Memory 3000MHz',
-// //     description: 'bardzo wydajne kości RAM do PC',
-// //     price: 400,
-// //   },
-// //   {
-// //     name: 'ADATA 1TB SSD SHX3000',
-// //     description: 'szybki dysk SDD do komputera',
-// //     price: 350,
-// //   },
-// // ]
-//
-// @Injectable()
-// export class ShopService {
-//
-//   constructor(
-//     @Inject(forwardRef(() => BasketService)) private basketService: BasketService,
-//     @InjectRepository(ShopItem) private shopItemRepository: Repository<ShopItem>,
-//   ) {
-//   }
-//
-//   async getProducts(): Promise<GetListOfProductsResponse> {
-//     return await this.shopItemRepository.find();
-//   }
-//
-//   async hasProduct(name: string): Promise<boolean> {
-//     return (await this.getProducts()).some(item => item.name === name)
-//   }
-//
-//   async getPriceOfProduct(name: string): Promise<number> {
-//     return (await this.getProducts()).find(item => item.name === name).price
-//   }
-// }
-
 import { Injectable } from '@nestjs/common';
+import { GetListOfProductsResponse, GetPaginatedListOfProductsResponse } from 'src/interfaces/shop';
 import { ShopItem } from './shop-item.entity';
 
 @Injectable()
 export class ShopService {
-  async getProducts(): Promise<ShopItem[]> {
-    return ShopItem.find();
+  
+  async getProducts(currentPage: number = 1): Promise<GetPaginatedListOfProductsResponse> {
+    // const [items, count] = await ShopItem.findAndCount({
+    //   take: 3,
+    // })
+
+    // console.log({count});
+    
+    // return items;
+    const maxOnPage = 3;
+
+    const [items, count] = await ShopItem.findAndCount({
+      skip: maxOnPage * (currentPage - 1),
+      take: maxOnPage,
+    })
+
+    const pagesCount = Math.ceil(count / maxOnPage);
+
+    console.log({count, pagesCount});
+
+    return {
+      items,
+      pagesCount,
+    }
+    
   }
 
   async hasProduct(name: string): Promise<boolean> {
-    return (await this.getProducts()).some((item) => item.name === name);
+    return (await this.getProducts()).items.some((item) => item.name === name);
   }
 
   async getPriceOfProduct(name: string): Promise<number> {
-    return (await this.getProducts()).find((item) => item.name === name).price;
+    return (await this.getProducts()).items.find((item) => item.name === name).price;
   }
 
   async getOneProduct(id: string): Promise<ShopItem> {
@@ -92,5 +69,14 @@ export class ShopService {
     item.boughtCounter++;
 
     await ShopItem.save(item);
+  }
+
+  async findProduct(searchTerm: string): Promise<GetListOfProductsResponse> {
+    return await ShopItem.find({
+      where: [
+        {description: 'Super auto'},
+        {price: 9.8},
+      ]
+    });
   }
 }
