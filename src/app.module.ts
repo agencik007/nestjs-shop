@@ -16,17 +16,5 @@ import { DatabaseModule } from "./database/database.module";
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}
-//
-// TypeOrmModule.forRoot({
-//   type: 'mysql',
-//   host: dbConfig.DB_HOST,
-//   port: dbConfig.DB_PORT,
-//   username: dbConfig.DB_USERNAME,
-//   password: dbConfig.DB_PASSWORD,
-//   database: dbConfig.DB_NAME,
-//   entities: ['dist/**/**.entity{.ts,.js}'],
-//   bigNumberStrings: false,
-//   logging: true,
-//   synchronize: false
-// })
