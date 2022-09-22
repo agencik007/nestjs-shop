@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GetListOfProductsResponse, GetPaginatedListOfProductsResponse } from 'src/interfaces/shop';
+import { Like } from 'typeorm';
 import { ShopItem } from './shop-item.entity';
 
 @Injectable()
@@ -73,10 +74,9 @@ export class ShopService {
 
   async findProduct(searchTerm: string): Promise<GetListOfProductsResponse> {
     return await ShopItem.find({
-      where: [
-        {description: 'Super auto'},
-        {price: 9.8},
-      ]
+      where: {
+        description: Like(`%${searchTerm}%`),
+      }
     });
   }
 }
