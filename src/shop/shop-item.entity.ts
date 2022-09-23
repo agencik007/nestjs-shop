@@ -1,6 +1,7 @@
-import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { ShopItemInterface } from '../interfaces/shop';
 import { ShopItemDetails } from './shop-item-details.entity';
+import { ShopSet } from './shop-set.entity';
 
 @Entity()
 export class ShopItem extends BaseEntity implements ShopItemInterface {
@@ -51,11 +52,15 @@ export class ShopItem extends BaseEntity implements ShopItemInterface {
   @JoinColumn()
   details: ShopItemDetails;
 
+  @ManyToMany(type => ShopSet, entity => entity.items)
+  @JoinTable()
+  sets: ShopSet[];
+
   /* Subproduct */
-  @ManyToOne(type => ShopItem, entity => entity.subShopItems)
-  mainShopItem: ShopItem;
+  // @ManyToOne(type => ShopItem, entity => entity.subShopItems)
+  // mainShopItem: ShopItem;
 
   /* Main product */
-  @OneToMany(type => ShopItem, entity => entity.mainShopItem)
-  subShopItems: ShopItem[];
+  // @OneToMany(type => ShopItem, entity => entity.mainShopItem)
+  // subShopItems: ShopItem[];
 }
