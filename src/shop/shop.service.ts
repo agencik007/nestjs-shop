@@ -1,36 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { GetListOfProductsResponse, GetPaginatedListOfProductsResponse } from 'src/interfaces/shop';
-import { Like } from 'typeorm';
+import {
+  GetListOfProductsResponse,
+  GetPaginatedListOfProductsResponse,
+} from 'src/interfaces/shop';
+import { DataSource, Like } from 'typeorm';
 import { ShopItemDetails } from './shop-item-details.entity';
 import { ShopItem } from './shop-item.entity';
 
 @Injectable()
 export class ShopService {
-  
-  async getProducts(currentPage: number = 1): Promise<GetPaginatedListOfProductsResponse> {
+  constructor(private dataSource: DataSource) {}
+
+  async getProducts(
+    currentPage: number = 1,
+  ): Promise<GetPaginatedListOfProductsResponse> {
     // const [items, count] = await ShopItem.findAndCount({
     //   take: 3,
     // })
 
     // console.log({count});
-    
+
     // return items;
     const maxOnPage = 3;
 
     const [items, count] = await ShopItem.findAndCount({
       skip: maxOnPage * (currentPage - 1),
       take: maxOnPage,
-    })
+    });
 
     const pagesCount = Math.ceil(count / maxOnPage);
 
-    console.log({count, pagesCount});
+    console.log({ count, pagesCount });
 
     return {
       items,
       pagesCount,
-    }
-    
+    };
   }
 
   async hasProduct(name: string): Promise<boolean> {
@@ -38,7 +43,8 @@ export class ShopService {
   }
 
   async getPriceOfProduct(name: string): Promise<number> {
-    return (await this.getProducts()).items.find((item) => item.name === name).price;
+    return (await this.getProducts()).items.find((item) => item.name === name)
+      .price;
   }
 
   async getOneProduct(id: string): Promise<ShopItem> {
@@ -84,10 +90,13 @@ export class ShopService {
   }
 
   async findProduct(searchTerm: string): Promise<GetListOfProductsResponse> {
-    return await ShopItem.find({
-      where: {
-        description: Like(`%${searchTerm}%`),
-      }
-    });
+    return await this.dataSource
+      .createQueryBuilder()
+      .select('shopItem')
+      .from(ShopItem, 'shopItem')
+      .where('shopItem.description LIKE :searchTerm', {
+        searchTerm: `%${searchTerm}%`,
+      })
+      .getMany();
   }
 }

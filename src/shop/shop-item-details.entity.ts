@@ -1,19 +1,25 @@
-import { BaseEntity, Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { ShopItem } from "./shop-item.entity";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ShopItem } from './shop-item.entity';
 
 @Entity()
 export class ShopItemDetails extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-    
-    @Column({
-        length: 15,
-    })
-    color: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    width: number;
+  @Column({
+    length: 15,
+  })
+  color: string;
 
-    @OneToOne(type => ShopItem)
-    shopItem: ShopItem;
+  @Column()
+  width: number;
+
+  @OneToOne((type) => ShopItem)
+  shopItem: ShopItem;
 }

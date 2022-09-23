@@ -1,4 +1,15 @@
-import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { ShopItemInterface } from '../interfaces/shop';
 import { ShopItemDetails } from './shop-item-details.entity';
 import { ShopSet } from './shop-set.entity';
@@ -47,12 +58,12 @@ export class ShopItem extends BaseEntity implements ShopItemInterface {
     default: false,
   })
   wasEvenBought: boolean;
-  
-  @OneToOne(type => ShopItemDetails)
+
+  @OneToOne((type) => ShopItemDetails, { eager: true })
   @JoinColumn()
   details: ShopItemDetails;
 
-  @ManyToMany(type => ShopSet, entity => entity.items)
+  @ManyToMany((type) => ShopSet, (entity) => entity.items)
   @JoinTable()
   sets: ShopSet[];
 

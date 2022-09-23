@@ -1,5 +1,5 @@
-import { dbConfig } from "../../db.config";
-import { DataSource, DataSourceOptions } from "typeorm";
+import { dbConfig } from '../../db.config';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const connectionSource = new DataSource({
   type: 'mysql',

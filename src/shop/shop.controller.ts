@@ -19,7 +19,6 @@ import { ShopService } from './shop.service';
 
 @Controller('shop')
 export class ShopController {
-
   // // When all app modules are loaded
   // onApplicationBootstrap() {
   //   console.log('hello');
@@ -43,7 +42,7 @@ export class ShopController {
   testFindItem(
     @Param('searchTerm') searchTerm: string,
   ): Promise<GetListOfProductsResponse> {
-    return this.shopService.findProduct(searchTerm)
+    return this.shopService.findProduct(searchTerm);
   }
 
   @Get('/:id')
