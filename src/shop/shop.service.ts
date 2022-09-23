@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { GetListOfProductsResponse, GetPaginatedListOfProductsResponse } from 'src/interfaces/shop';
 import { Like } from 'typeorm';
+import { ShopItemDetails } from './shop-item-details.entity';
 import { ShopItem } from './shop-item.entity';
 
 @Injectable()
@@ -51,9 +52,19 @@ export class ShopService {
   async createOneProduct(): Promise<ShopItem> {
     const newItem = new ShopItem();
 
-    newItem.name = 'Buraki';
-    newItem.description = 'Bardzo dobre!';
+    newItem.name = 'Papaja';
+    newItem.description = 'Ultra drogie';
     newItem.price = 25.0;
+
+    await ShopItem.save(newItem);
+
+    const detalis = new ShopItemDetails();
+    detalis.color = 'green';
+    detalis.width = 20;
+
+    await detalis.save();
+
+    newItem.details = detalis;
 
     await ShopItem.save(newItem);
 
