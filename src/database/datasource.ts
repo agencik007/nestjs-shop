@@ -16,7 +16,7 @@ export const connectionSource = new DataSource({
   bigNumberStrings: false,
   logging: true,
   migrations: ['dist/migration/*.js'],
-  synchronize: false,
+  synchronize: true,
   autoLoadEntities: true,
   extra: {
     decimalNumbers: true,
