@@ -3,7 +3,7 @@ import {
   GetListOfProductsResponse,
   GetPaginatedListOfProductsResponse,
 } from 'src/interfaces/shop';
-import { DataSource, Like } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { ShopItemDetails } from './shop-item-details.entity';
 import { ShopItem } from './shop-item.entity';
 
@@ -90,6 +90,15 @@ export class ShopService {
   }
 
   async findProduct(searchTerm: string): Promise<GetListOfProductsResponse> {
+
+    const {count} = await this.dataSource
+      .createQueryBuilder()
+      .select('COUNT(shopItem.id)', 'count')
+      .from(ShopItem, 'shopItem')
+      .getRawOne()
+
+      console.log({count});
+      
     return await this.dataSource
       .createQueryBuilder()
       .select('shopItem')
@@ -97,6 +106,7 @@ export class ShopService {
       .where('shopItem.description LIKE :searchTerm', {
         searchTerm: `%${searchTerm}%`,
       })
+      .orderBy('shopItem.id', 'DESC')
       .getMany();
   }
 }
